@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { width: 250px; padding: 15px; font-family: sans-serif; }
+        .btn { background: #2563eb; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px; }
+        .status { font-size: 12px; margin-top: 8px; color: #059669; display: none; }
+    </style>
+</head>
+<body>
+    <h3>Configurar Fuente</h3>
+    <input type="file" id="fontInput" accept=".ttf">
+    <button id="saveBtn" class="btn">Guardar y Aplicar</button>
+    <p id="status" class="status">¡Fuente guardada! Recarga las pestañas.</p>
+
+    <script>
+        document.getElementById('saveBtn').addEventListener('click', () => {
+            const file = document.getElementById('fontInput').files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const base64Font = e.target.result;
+                chrome.storage.local.set({ "customFont": base64Font }, () => {
+                    document.getElementById('status').style.display = 'block';
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+    </script>
+</body>
+</html>
